@@ -6,6 +6,7 @@ class_name Player
 @export var speed = 14
 # The downward acceleration when in the air, in meters per second squared.
 @export var fall_acceleration = 75
+@export var jump_impulse = 20
 
 @export_group("Camera")
 @export var mouse_sensitivity = 0.002
@@ -32,6 +33,10 @@ func _physics_process(delta):
 			velocity.y -= fall_acceleration * delta
 		else:
 			velocity.y = 0.0
+		
+		if is_on_floor() and Input.is_action_just_pressed("jump"):
+			print("jump in")
+			velocity.y = jump_impulse
 
 		move_and_slide()
 

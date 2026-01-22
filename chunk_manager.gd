@@ -16,15 +16,7 @@ var initial_load := false
 var debug_line := false
 
 @export var chunks_per_frame := 1
-@export var render_distance = 4
-
-func chunk_to_world_space(chunk: Vector2i) -> Vector3:
-	return Vector3(chunk.x*Chunk.CHUNK_SIZE, 0, chunk.y*Chunk.CHUNK_SIZE)
-
-func world_to_chunk(p: Vector3) -> Vector2i:
-	var cx := int(floor(p.x / float(Chunk.CHUNK_SIZE)))
-	var cz := int(floor(p.z / float(Chunk.CHUNK_SIZE)))
-	return Vector2i(cx, cz)
+@export var render_distance = 6
 
 func gen_chunk() -> void:
 	
@@ -40,21 +32,21 @@ func gen_chunk() -> void:
 	if !wanted_chunks.has(queued_chunk):
 		return
 
-	var chunk := Chunk.new()
-	chunk.position = chunk_to_world_space(queued_chunk)
+	var chunk := Chunk.new(queued_chunk)
+	chunk.position = ChunkHelper.chunk_to_world_space(queued_chunk)
 	add_child(chunk)
 	chunks[queued_chunk] = chunk
 
 func load_chunks() -> void:
-	var pc := world_to_chunk(player.global_position)
+	var pc := ChunkHelper.world_to_chunk(player.global_position)
 	wanted_chunks.clear()
 	
 	for cx in range(pc.x - render_distance, pc.x + render_distance + 1):
 		for cz in range(pc.y - render_distance, pc.y + render_distance + 1):
 			var key = Vector2i(cx, cz)
-			wanted_chunks[key] = null
+			wanted_chunks[key] = true
 			if !chunks.has(key) and !enqueued_chunks.has(key):
-				enqueued_chunks[key] = null
+				enqueued_chunks[key] = true
 				queue.append(key)
 
 	# unwanted chunks get unloaded
@@ -67,11 +59,11 @@ func _ready():
 	player = player_prefab.instantiate() as Player
 	add_child(player)
 	player.global_position = Vector3(Chunk.CHUNK_SIZE * 0.5, 18, Chunk.CHUNK_SIZE * 0.5)
-	player_chunk_coordinates = world_to_chunk(player.global_position)
+	player_chunk_coordinates = ChunkHelper.world_to_chunk(player.global_position)
 	load_chunks()
 
 func _physics_process(delta):
-	var current_chunk_coordinates = world_to_chunk(player.global_position)
+	var current_chunk_coordinates = ChunkHelper.world_to_chunk(player.global_position)
 	if current_chunk_coordinates != player_chunk_coordinates:
 		player_chunk_coordinates = current_chunk_coordinates
 		load_chunks()
@@ -81,9 +73,9 @@ func _physics_process(delta):
 	
 	if !initial_load and queue.is_empty():
 		initial_load = true
-	
+
 func _process(delta):
-	if Engine.get_frames_drawn() % 1 == 0 and debug_line:
+	if Engine.get_frames_drawn() % 1 == 30 and debug_line:
 		print("Frame: ", Engine.get_frames_drawn(), ", Chunks loaded: ", \
 			chunks.size(), ", Wanted chunks: ", wanted_chunks.size(), \
 			", Chunks queued: ", queue.size(), ", Initial load: ", initial_load)
