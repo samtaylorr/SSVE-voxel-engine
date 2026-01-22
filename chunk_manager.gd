@@ -62,7 +62,7 @@ func _ready():
 	player_chunk_coordinates = ChunkHelper.world_to_chunk(player.global_position)
 	load_chunks()
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	var current_chunk_coordinates = ChunkHelper.world_to_chunk(player.global_position)
 	if current_chunk_coordinates != player_chunk_coordinates:
 		player_chunk_coordinates = current_chunk_coordinates
@@ -74,7 +74,7 @@ func _physics_process(delta):
 	if !initial_load and queue.is_empty():
 		initial_load = true
 
-func _process(delta):
+func _process(_delta):
 	if Engine.get_frames_drawn() % 1 == 30 and debug_line:
 		print("Frame: ", Engine.get_frames_drawn(), ", Chunks loaded: ", \
 			chunks.size(), ", Wanted chunks: ", wanted_chunks.size(), \

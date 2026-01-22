@@ -12,24 +12,6 @@ enum BlockType {
 	NumTypes
 }
 
-enum Faces { BACK,FRONT,LEFT,RIGHT,TOP,BOTTOM }
-
-const FACE_BACK   := 1 << Faces.BACK
-const FACE_FRONT  := 1 << Faces.FRONT
-const FACE_LEFT   := 1 << Faces.LEFT
-const FACE_RIGHT  := 1 << Faces.RIGHT
-const FACE_TOP    := 1 << Faces.TOP
-const FACE_BOTTOM := 1 << Faces.BOTTOM
-
-static var FACE_DATA := [
-	{ "bit": FACE_BACK,   "n": Vector3(0, 0, -1), "v": PackedVector3Array([Vector3(0,0,0), Vector3(1,1,0), Vector3(0,1,0), Vector3(0,0,0), Vector3(1,0,0), Vector3(1,1,0)]) },
-	{ "bit": FACE_FRONT,  "n": Vector3(0, 0,  1), "v": PackedVector3Array([Vector3(0,1,1), Vector3(1,1,1), Vector3(0,0,1), Vector3(1,1,1), Vector3(1,0,1), Vector3(0,0,1)]) },
-	{ "bit": FACE_LEFT,   "n": Vector3(-1,0, 0),  "v": PackedVector3Array([Vector3(0,1,1), Vector3(0,0,1), Vector3(0,1,0), Vector3(0,1,0), Vector3(0,0,1), Vector3(0,0,0)]) },
-	{ "bit": FACE_RIGHT,  "n": Vector3( 1,0, 0),  "v": PackedVector3Array([Vector3(1,1,0), Vector3(1,0,0), Vector3(1,1,1), Vector3(1,1,1), Vector3(1,0,0), Vector3(1,0,1)]) },
-	{ "bit": FACE_TOP,    "n": Vector3(0, 1, 0),  "v": PackedVector3Array([Vector3(0,1,0), Vector3(1,1,0), Vector3(1,1,1), Vector3(0,1,0), Vector3(1,1,1), Vector3(0,1,1)]) },
-	{ "bit": FACE_BOTTOM, "n": Vector3(0,-1, 0),  "v": PackedVector3Array([Vector3(0,0,0), Vector3(1,0,1), Vector3(1,0,0), Vector3(0,0,0), Vector3(0,0,1), Vector3(1,0,1)]) },
-]
-
 var blocks: PackedByteArray = PackedByteArray()
 var chunk_coordinates
 const CHUNK_SIZE := 16
@@ -41,16 +23,17 @@ const BASE_HEIGHT := 8
 
 var noise_gen := FastNoiseLite.new()
 
-func emit_face(st: SurfaceTool, base: Vector3, normal: Vector3, verts: PackedVector3Array) -> void:
+func emit_face(st: SurfaceTool, base: Vector3, normal: Vector3, verts: PackedVector3Array, uvs: PackedVector2Array) -> void:
 	st.set_normal(normal)
-	for off in verts:
-		st.add_vertex(base + off)
+	for i in range(verts.size()):
+		st.set_uv(uvs[i])
+		st.add_vertex(base + verts[i])
 
 func create_cube(st: SurfaceTool, x:int, y:int, z:int, culling_mask:int) -> void:
 	var base := Vector3(x,y,z)
-	for f in FACE_DATA:
+	for f in ChunkHelper.FACE_DATA:
 		if (culling_mask & f["bit"]) != 0:
-			emit_face(st, base, f["n"], f["v"])
+			emit_face(st, base, f["n"], f["v"], f["uv"])
 
 func create_mesh() -> void:
 	var st := SurfaceTool.new()
@@ -60,28 +43,28 @@ func create_mesh() -> void:
 	for z in range(CHUNK_SIZE):
 		for y in range(CHUNK_SIZE):
 			for x in range(CHUNK_SIZE):
-				var i := x + CHUNK_SIZE * (y + CHUNK_SIZE * z)
+				var i := x + (y * CHUNK_SIZE) + (z * XY)
 				if blocks_local[i] == BlockType.Air:
 					continue
 				var mask := 0
 				# Back (-Z)
 				if z == 0 or blocks_local[i - XY] == BlockType.Air:
-					mask |= FACE_BACK
+					mask |= ChunkHelper.FACE_BACK
 				# Front (+Z)
 				if z == CHUNK_SIZE - 1 or blocks_local[i + XY] == BlockType.Air:
-					mask |= FACE_FRONT
+					mask |= ChunkHelper.FACE_FRONT
 				# Bottom (-Y)
 				if y == 0 or blocks_local[i - CHUNK_SIZE] == BlockType.Air:
-					mask |= FACE_BOTTOM
+					mask |= ChunkHelper.FACE_BOTTOM
 				# Top (+Y)
 				if y == CHUNK_SIZE - 1 or blocks_local[i + CHUNK_SIZE] == BlockType.Air:
-					mask |= FACE_TOP
+					mask |= ChunkHelper.FACE_TOP
 				# Left (-X)
 				if x == 0 or blocks_local[i - 1] == BlockType.Air:
-					mask |= FACE_LEFT
+					mask |= ChunkHelper.FACE_LEFT
 				# Right (+X)
 				if x == CHUNK_SIZE - 1 or blocks_local[i + 1] == BlockType.Air:
-					mask |= FACE_RIGHT
+					mask |= ChunkHelper.FACE_RIGHT
 				if mask != 0:
 					create_cube(st, x, y, z, mask)
 	
