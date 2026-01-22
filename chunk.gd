@@ -40,11 +40,28 @@ func emit_face(st: SurfaceTool, base: Vector3, normal: Vector3, verts: PackedVec
 		st.set_uv(final_uv)
 		st.add_vertex(base + verts[i])
 
-func create_mesh() -> void:
+func generate_chunk() -> void:
+	blocks.resize(CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE)
+	var world_origin = ChunkHelper.chunk_to_world_space(chunk_coordinates)
+	for x in range (CHUNK_SIZE):
+		for z in range(CHUNK_SIZE):
+			var height := BASE_HEIGHT*noise_gen.get_noise_2d(world_origin.x+x,world_origin.z+z)*BASE_HEIGHT
+			for y in range(CHUNK_SIZE):
+				if y+world_origin.y <= height:
+					blocks[x + (y * CHUNK_SIZE) + (z * XY)] = ChunkHelper.BlockType.Grass
+				else:
+					blocks[x + (y * CHUNK_SIZE) + (z * XY)] = ChunkHelper.BlockType.Air
+
+func _finalize_chunk(mesh: Mesh, shape: Shape3D) -> void:
+	self.mesh = mesh
+	_setup_collision(shape)
+	apply_material()
+
+func generate_on_thread():
+	generate_chunk()
 	var st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	var blocks_local := blocks # local reference = faster
-
 	for z in range(CHUNK_SIZE):
 		for y in range(CHUNK_SIZE):
 			for x in range(CHUNK_SIZE):
@@ -72,20 +89,9 @@ func create_mesh() -> void:
 					mask |= ChunkHelper.FACE_RIGHT
 				if mask != 0:
 					create_cube(st, x, y, z, mask, blocks_local[i])
-	
-	mesh = st.commit()
-
-func generate_chunk() -> void:
-	blocks.resize(CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE)
-	var world_origin = ChunkHelper.chunk_to_world_space(chunk_coordinates)
-	for x in range (CHUNK_SIZE):
-		for z in range(CHUNK_SIZE):
-			var height := BASE_HEIGHT*noise_gen.get_noise_2d(world_origin.x+x,world_origin.z+z)*BASE_HEIGHT
-			for y in range(CHUNK_SIZE):
-				if y+world_origin.y <= height:
-					blocks[x + (y * CHUNK_SIZE) + (z * XY)] = ChunkHelper.BlockType.Grass
-				else:
-					blocks[x + (y * CHUNK_SIZE) + (z * XY)] = ChunkHelper.BlockType.Air
+	var final_mesh = st.commit()
+	var shape := final_mesh.create_trimesh_shape()
+	call_deferred("_finalize_chunk", final_mesh, shape)
 
 func apply_material():
 	var mat = StandardMaterial3D.new()
@@ -94,7 +100,7 @@ func apply_material():
 	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	self.material_override = mat
 
-func _setup_collision() -> void:
+func _setup_collision(shape: Shape3D) -> void:
 	if mesh == null:
 		return
 	
@@ -103,14 +109,10 @@ func _setup_collision() -> void:
 	if col.get_parent() == null:
 		body.add_child(col)
 		
-	col.shape = mesh.create_trimesh_shape()
+	col.shape = shape
 
 func _ready() -> void:
 	noise_gen.noise_type = FastNoiseLite.TYPE_PERLIN
-	generate_chunk()
-	create_mesh()
-	_setup_collision()
-	apply_material()
 
 func _init(cc: Vector2i): 
 	chunk_coordinates = cc

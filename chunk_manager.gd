@@ -15,8 +15,8 @@ var player_chunk_coordinates : Vector2i
 var initial_load := false
 var debug_line := false
 
-@export var chunks_per_frame := 1
-@export var render_distance = 6
+@export var chunks_per_frame := 4
+@export var render_distance = 8
 
 func gen_chunk() -> void:
 	
@@ -36,6 +36,7 @@ func gen_chunk() -> void:
 	chunk.position = ChunkHelper.chunk_to_world_space(queued_chunk)
 	add_child(chunk)
 	chunks[queued_chunk] = chunk
+	WorkerThreadPool.add_task(chunk.generate_on_thread)
 
 func load_chunks() -> void:
 	var pc := ChunkHelper.world_to_chunk(player.global_position)
