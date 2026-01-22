@@ -2,14 +2,15 @@
 
 [ext_resource type="Script" uid="uid://6blhmuxk4lav" path="res://player.gd" id="1_72ieh"]
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_7dm0k"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_72ieh"]
+size = Vector3(0.75, 1.5, 0.75)
 
 [node name="Player" type="CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20, 0)
 script = ExtResource("1_72ieh")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-shape = SubResource("CapsuleShape3D_7dm0k")
+shape = SubResource("BoxShape3D_72ieh")
 
 [node name="Pivot" type="Node3D" parent="."]
 

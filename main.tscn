@@ -1,7 +1,16 @@
-[gd_scene format=3 uid="uid://dvuvyhuo2u1rk"]
+[gd_scene load_steps=4 format=3 uid="uid://dvuvyhuo2u1rk"]
+
+[sub_resource type="Environment" id="Environment_7dm0k"]
+background_mode = 1
+background_color = Color(0.5294118, 0.80784315, 0.92156863, 1)
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_ig7tw"]
+
+[sub_resource type="Compositor" id="Compositor_0xm2m"]
 
 [node name="Main" type="Node"]
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.70710677, 0.70710677, 0, -0.70710677, 0.70710677, 0, 25, 32.815533)
-shadow_enabled = true
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_7dm0k")
+camera_attributes = SubResource("CameraAttributesPractical_ig7tw")
+compositor = SubResource("Compositor_0xm2m")
