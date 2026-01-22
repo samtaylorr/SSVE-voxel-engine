@@ -3,12 +3,15 @@ class_name Chunk
 
 var blocks: PackedByteArray = PackedByteArray()
 var chunk_coordinates
-const CHUNK_SIZE := 16
+const CHUNK_SIZE := 32
 const XY := CHUNK_SIZE * CHUNK_SIZE
-const BASE_HEIGHT := 8
+const MIN_HEIGHT := 4
+const HEIGHT_VARIANCE := 24
 
 var atlas_width := 64.0
 var tile_size := 16.0
+
+var is_ready := false
 
 @onready var body := StaticBody3D.new()
 @onready var col  := CollisionShape3D.new()
@@ -45,17 +48,21 @@ func generate_chunk() -> void:
 	var world_origin = ChunkHelper.chunk_to_world_space(chunk_coordinates)
 	for x in range (CHUNK_SIZE):
 		for z in range(CHUNK_SIZE):
-			var height := BASE_HEIGHT*noise_gen.get_noise_2d(world_origin.x+x,world_origin.z+z)*BASE_HEIGHT
+			var raw_noise := noise_gen.get_noise_2d(world_origin.x+x,world_origin.z+z)
+			var normalized := (raw_noise + 1.0)/2.0
+			var height = MIN_HEIGHT + (normalized * HEIGHT_VARIANCE)
 			for y in range(CHUNK_SIZE):
+				var idx := x + (y * CHUNK_SIZE) + (z * XY)
 				if y+world_origin.y <= height:
-					blocks[x + (y * CHUNK_SIZE) + (z * XY)] = ChunkHelper.BlockType.Grass
+					blocks[idx] = ChunkHelper.BlockType.Grass
 				else:
-					blocks[x + (y * CHUNK_SIZE) + (z * XY)] = ChunkHelper.BlockType.Air
+					blocks[idx] = ChunkHelper.BlockType.Air
 
-func _finalize_chunk(mesh: Mesh, shape: Shape3D) -> void:
-	self.mesh = mesh
+func _finalize_chunk(_mesh: Mesh, shape: Shape3D) -> void:
+	self.mesh = _mesh
 	_setup_collision(shape)
 	apply_material()
+	is_ready = true
 
 func generate_on_thread():
 	generate_chunk()
@@ -113,6 +120,8 @@ func _setup_collision(shape: Shape3D) -> void:
 
 func _ready() -> void:
 	noise_gen.noise_type = FastNoiseLite.TYPE_PERLIN
+	noise_gen.frequency = 0.02
+	noise_gen.fractal_octaves = 4
 
 func _init(cc: Vector2i): 
 	chunk_coordinates = cc

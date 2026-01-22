@@ -9,8 +9,10 @@ var enqueued_chunks : Dictionary = {} # Used as a set, Dictionary<Vector2i, null
 var queue : Array[Vector2i] = []
 var wanted_chunks := {} # Dictionary[Vector2i, bool]
 var player_prefab := preload("res://prefabs/player.tscn")
+var loading_screen_prefab := preload("res://prefabs/loading_screen.tscn")
 var player : Player
 var player_chunk_coordinates : Vector2i
+var loading_screen
 
 var initial_load := false
 var debug_line := false
@@ -73,7 +75,8 @@ func _physics_process(_delta):
 		gen_chunk()
 	
 	if !initial_load and queue.is_empty():
-		initial_load = true
+		if chunks.has(current_chunk_coordinates) and chunks[current_chunk_coordinates].is_ready:
+			initial_load = true
 
 func _process(_delta):
 	if Engine.get_frames_drawn() % 1 == 30 and debug_line:

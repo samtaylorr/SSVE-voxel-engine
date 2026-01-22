@@ -1,4 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://dvuvyhuo2u1rk"]
+[gd_scene load_steps=5 format=3 uid="uid://dvuvyhuo2u1rk"]
+
+[ext_resource type="PackedScene" uid="uid://b33ji6l0xidsu" path="res://prefabs/loading_screen.tscn" id="1_0xm2m"]
 
 [sub_resource type="Environment" id="Environment_7dm0k"]
 background_mode = 1
@@ -14,3 +16,5 @@ background_color = Color(0.5294118, 0.80784315, 0.92156863, 1)
 environment = SubResource("Environment_7dm0k")
 camera_attributes = SubResource("CameraAttributesPractical_ig7tw")
 compositor = SubResource("Compositor_0xm2m")
+
+[node name="LoadingScreen" parent="." instance=ExtResource("1_0xm2m")]
