@@ -1,16 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://dvuvyhuo2u1rk"]
-
-[ext_resource type="Script" uid="uid://dlb3r512pfpq0" path="res://chunk.gd" id="1_ig7tw"]
+[gd_scene format=3 uid="uid://dvuvyhuo2u1rk"]
 
 [node name="Main" type="Node"]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.70710677, 0.70710677, 0, -0.70710677, 0.70710677, 0, 25, 32.815533)
 shadow_enabled = true
-
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(0.7071068, -0.35355338, 0.61237246, 0, 0.8660254, 0.50000006, -0.7071068, -0.35355338, 0.61237246, 3, 3, -2)
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4)
-script = ExtResource("1_ig7tw")

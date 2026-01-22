@@ -21,8 +21,20 @@ const FACE_RIGHT  := 1 << Faces.RIGHT
 const FACE_TOP    := 1 << Faces.TOP
 const FACE_BOTTOM := 1 << Faces.BOTTOM
 
+var FACE_DATA := [
+	{ "bit": FACE_BACK,   "n": Vector3(0, 0, -1), "v": PackedVector3Array([Vector3(0,0,0), Vector3(1,1,0), Vector3(0,1,0), Vector3(0,0,0), Vector3(1,0,0), Vector3(1,1,0)]) },
+	{ "bit": FACE_FRONT,  "n": Vector3(0, 0,  1), "v": PackedVector3Array([Vector3(0,1,1), Vector3(1,1,1), Vector3(0,0,1), Vector3(1,1,1), Vector3(1,0,1), Vector3(0,0,1)]) },
+	{ "bit": FACE_LEFT,   "n": Vector3(-1,0, 0),  "v": PackedVector3Array([Vector3(0,1,1), Vector3(0,0,1), Vector3(0,1,0), Vector3(0,1,0), Vector3(0,0,1), Vector3(0,0,0)]) },
+	{ "bit": FACE_RIGHT,  "n": Vector3( 1,0, 0),  "v": PackedVector3Array([Vector3(1,1,0), Vector3(1,0,0), Vector3(1,1,1), Vector3(1,1,1), Vector3(1,0,0), Vector3(1,0,1)]) },
+	{ "bit": FACE_TOP,    "n": Vector3(0, 1, 0),  "v": PackedVector3Array([Vector3(0,1,0), Vector3(1,1,0), Vector3(1,1,1), Vector3(0,1,0), Vector3(1,1,1), Vector3(0,1,1)]) },
+	{ "bit": FACE_BOTTOM, "n": Vector3(0,-1, 0),  "v": PackedVector3Array([Vector3(0,0,0), Vector3(1,0,1), Vector3(1,0,0), Vector3(0,0,0), Vector3(0,0,1), Vector3(1,0,1)]) },
+]
+
 var blocks: PackedByteArray = PackedByteArray()
 const CHUNK_SIZE := 16
+
+@onready var body := StaticBody3D.new()
+@onready var col  := CollisionShape3D.new()
 
 func idx(x:int, y:int, z:int) -> int:
 	return x + CHUNK_SIZE * (y + CHUNK_SIZE * z)
@@ -37,107 +49,67 @@ func set_block(x:int, y:int, z:int, t:int) -> void:
 func is_solid(t:int) -> bool:
 	return t != BlockType.Air
 
-func calculate_culling_mask(x:int, y:int, z:int) -> int:
-	# Each side is represented by a bit inside of a byte, with the last two being empty.
-	# 0 	0 	  0 	 0 	 0 	   0    0	  0
-	# ^ 	^ 	  ^ 	 ^ 	 ^ 	   ^    ^	  ^
-	# Empty Empty Bottom Top Right Left Front Back
-	
-	# Don't waste calls on calculating empty blocks
-	if !is_solid(get_block(x,y,z)):
-		return 0
-	
-	var mask := 0
-	if z == 0 or !is_solid(get_block(x,y,z-1)):
-		mask |= FACE_BACK
-	if z == CHUNK_SIZE - 1 or !is_solid(get_block(x,y,z+1)):
-		mask |= FACE_FRONT
-	if y == 0 or !is_solid(get_block(x,y-1,z)):
-		mask |= FACE_BOTTOM
-	if y == CHUNK_SIZE - 1 or !is_solid(get_block(x,y+1,z)):
-		mask |= FACE_TOP
-	if x == 0 or !is_solid(get_block(x-1,y,z)):
-		mask |= FACE_LEFT
-	if x == CHUNK_SIZE - 1 or !is_solid(get_block(x+1,y,z)):
-		mask |= FACE_RIGHT
-	return mask
+func emit_face(st: SurfaceTool, base: Vector3, normal: Vector3, verts: Array[Vector3]) -> void:
+	st.set_normal(normal)
+	for off in verts:
+		st.add_vertex(base + off)
 
 func create_cube(st: SurfaceTool, x:int, y:int, z:int, culling_mask:int):
-	if (culling_mask & FACE_BACK) != 0:
-		st.set_normal(Vector3(0, 0, -1))
-		st.add_vertex(Vector3(x, y, z)) # bottom-left
-		st.add_vertex(Vector3(x+1, y+1, z)) # top-right
-		st.add_vertex(Vector3(x, y+1, z)) # top-left
-		st.add_vertex(Vector3(x, y, z)) # bottom-left
-		st.add_vertex(Vector3(x+1, y, z)) # bottom-right
-		st.add_vertex(Vector3(x+1, y+1, z)) # top-right
-
-	if (culling_mask & FACE_FRONT) != 0:
-		st.set_normal(Vector3(0, 0, 1))
-		st.add_vertex(Vector3(x,  y+1, z+1)) # top-left
-		st.add_vertex(Vector3(x+1,  y+1, z+1)) # top-right
-		st.add_vertex(Vector3(x, y, z+1)) # bottom-left
-		st.add_vertex(Vector3(x+1,  y+1, z+1)) # top-right
-		st.add_vertex(Vector3(x+1, y, z+1)) # bottom-right
-		st.add_vertex(Vector3(x, y, z+1)) # bottom-left
-
-	if (culling_mask & FACE_LEFT) != 0:
-		st.set_normal(Vector3(-1, 0, 0))
-		st.add_vertex(Vector3(x,  y+1,  z+1)) # front-top
-		st.add_vertex(Vector3(x, y,  z+1)) # front-bottom
-		st.add_vertex(Vector3(x,  y+1, z)) # back-top
-		st.add_vertex(Vector3(x,  y+1, z)) # back-top
-		st.add_vertex(Vector3(x, y,  z+1)) # front-bottom
-		st.add_vertex(Vector3(x, y, z)) # back-bottom
-
-	if (culling_mask & FACE_RIGHT) != 0:
-		st.set_normal(Vector3(1, 0, 0))
-		st.add_vertex(Vector3(x+1,  y+1, z)) # back-top
-		st.add_vertex(Vector3(x+1, y, z)) # back-bottom
-		st.add_vertex(Vector3(x+1,  y+1,  z+1)) # front-top
-		st.add_vertex(Vector3(x+1,  y+1,  z+1)) # front-top
-		st.add_vertex(Vector3(x+1, y, z)) # back-bottom
-		st.add_vertex(Vector3(x+1, y,  z+1)) # front-bottom
-	 
-	if (culling_mask & FACE_TOP) != 0:
-		st.set_normal(Vector3(0, 1, 0))
-		st.add_vertex(Vector3(x,  y+1, z)) # back-left
-		st.add_vertex(Vector3(x+1,  y+1, z)) # back-right
-		st.add_vertex(Vector3(x+1,  y+1,  z+1)) # front-right
-		st.add_vertex(Vector3(x,  y+1, z)) # back-left
-		st.add_vertex(Vector3(x+1,  y+1,  z+1)) # front-right
-		st.add_vertex(Vector3(x,  y+1,  z+1)) # front-left
-
-	if (culling_mask & FACE_BOTTOM) != 0:
-		st.set_normal(Vector3(0, -1, 0))
-		st.add_vertex(Vector3(x, y, z)) # back-left
-		st.add_vertex(Vector3(x+1, y,  z+1)) # front-right
-		st.add_vertex(Vector3(x+1, y, z)) # back-right
-		st.add_vertex(Vector3(x, y, z)) # back-left
-		st.add_vertex(Vector3(x, y,  z+1)) # front-left
-		st.add_vertex(Vector3(x+1, y,  z+1)) # front-right
+	var base := Vector3(x,y,z)
+	for f in FACE_DATA:
+		if (culling_mask & f.bit) != 0:
+			emit_face(st, base, f.n, f.v)
 
 func create_mesh() -> void:
 	var st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 
-	for x in range(CHUNK_SIZE):
-		for y in range(CHUNK_SIZE):
-			for z in range(CHUNK_SIZE):
-				var cull: int = calculate_culling_mask(x,y,z)
-				if cull == 0:
-					continue
-				create_cube(st, x, y, z, cull)
+	const XY := CHUNK_SIZE * CHUNK_SIZE
+	var blocks_local := blocks # local reference = faster
 
+	for z in range(CHUNK_SIZE):
+		for y in range(CHUNK_SIZE):
+			for x in range(CHUNK_SIZE):
+				var i := x + CHUNK_SIZE * (y + CHUNK_SIZE * z)
+				if blocks_local[i] == BlockType.Air:
+					continue
+				var mask := 0
+				# Back (-Z)
+				if z == 0 or blocks_local[i - XY] == BlockType.Air:
+					mask |= FACE_BACK
+				# Front (+Z)
+				if z == CHUNK_SIZE - 1 or blocks_local[i + XY] == BlockType.Air:
+					mask |= FACE_FRONT
+				# Bottom (-Y)
+				if y == 0 or blocks_local[i - CHUNK_SIZE] == BlockType.Air:
+					mask |= FACE_BOTTOM
+				# Top (+Y)
+				if y == CHUNK_SIZE - 1 or blocks_local[i + CHUNK_SIZE] == BlockType.Air:
+					mask |= FACE_TOP
+				# Left (-X)
+				if x == 0 or blocks_local[i - 1] == BlockType.Air:
+					mask |= FACE_LEFT
+				# Right (+X)
+				if x == CHUNK_SIZE - 1 or blocks_local[i + 1] == BlockType.Air:
+					mask |= FACE_RIGHT
+				if mask != 0:
+					create_cube(st, x, y, z, mask)
+	
 	mesh = st.commit()
 
 func generate_chunk() -> void:
 	blocks.resize(CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE)
 	blocks.fill(BlockType.Grass) # super fast init
 
-func delete_chunk() -> void:
-	blocks = PackedByteArray()
+func _setup_collision() -> void:
+	if body.get_parent() == null:
+		add_child(body)
+	if col.get_parent() == null:
+		body.add_child(col)
+		
+	col.shape = mesh.create_trimesh_shape()
 
 func _ready() -> void:
 	generate_chunk()
 	create_mesh()
+	_setup_collision()
