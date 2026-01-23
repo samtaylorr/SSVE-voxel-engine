@@ -8,6 +8,8 @@ var chunks := {} # Dictionary<Vector2i, Chunk>
 var enqueued_chunks : Dictionary = {} # Used as a set, Dictionary<Vector2i, null>
 var queue : Array[Vector2i] = []
 var wanted_chunks := {} # Dictionary[Vector2i, bool]
+var pending_chunks := 0
+
 var player_prefab := preload("res://prefabs/player.tscn")
 var loading_screen_prefab := preload("res://prefabs/loading_screen.tscn")
 var player : Player
@@ -38,7 +40,20 @@ func gen_chunk() -> void:
 	chunk.position = ChunkHelper.chunk_to_world_space(queued_chunk)
 	add_child(chunk)
 	chunks[queued_chunk] = chunk
-	WorkerThreadPool.add_task(chunk.generate_on_thread)
+	pending_chunks += 1
+	WorkerThreadPool.add_task(func():
+		chunk.generate_on_thread()
+		call_deferred("_on_chunk_ready", queued_chunk)
+	)
+
+func _on_chunk_ready(key: Vector2i) -> void:
+	if !chunks.has(key):
+		# Chunk was unloaded while generating
+		pending_chunks -= 1
+		return
+
+	chunks[key].is_ready = true
+	pending_chunks -= 1
 
 func load_chunks() -> void:
 	var pc := ChunkHelper.world_to_chunk(player.global_position)
@@ -74,7 +89,7 @@ func _physics_process(_delta):
 	for i in range(chunks_per_frame):
 		gen_chunk()
 	
-	if !initial_load and queue.is_empty():
+	if !initial_load and queue.is_empty() and pending_chunks == 0:
 		if chunks.has(current_chunk_coordinates) and chunks[current_chunk_coordinates].is_ready:
 			initial_load = true
 
