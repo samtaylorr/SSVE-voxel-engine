@@ -69,7 +69,7 @@ func load_chunks() -> void:
 
 	# unwanted chunks get unloaded
 	for key in chunks.keys():
-		if !wanted_chunks.has(key):
+		if !wanted_chunks.has(key) and chunks[key].is_ready:
 			chunks[key].queue_free()
 			chunks.erase(key)
 

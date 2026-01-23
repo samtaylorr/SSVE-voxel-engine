@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://dx5vamsniy6av"]
+[gd_scene load_steps=4 format=3 uid="uid://dx5vamsniy6av"]
 
 [ext_resource type="Script" uid="uid://6blhmuxk4lav" path="res://scripts/player.gd" id="1_72ieh"]
+[ext_resource type="Script" uid="uid://d35xopa8ao08h" path="res://scripts/build_component.gd" id="2_4dohe"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_72ieh"]
 size = Vector3(0.75, 1.5, 0.75)
@@ -16,3 +17,6 @@ shape = SubResource("BoxShape3D_72ieh")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+
+[node name="BuildComponent" type="Node3D" parent="."]
+script = ExtResource("2_4dohe")
