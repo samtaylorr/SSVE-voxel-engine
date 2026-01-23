@@ -9,6 +9,40 @@ static func world_to_chunk(p: Vector3) -> Vector2i:
 	var cz := int(floor(p.z / float(Chunk.CHUNK_SIZE)))
 	return Vector2i(cx, cz)
 
+static func world_to_local(world_pos: Vector3) -> Vector3i:
+	# Use floor to handle negative world coordinates correctly
+	var x = int(floor(world_pos.x)) % Chunk.CHUNK_SIZE
+	var y = int(floor(world_pos.y)) % Chunk.CHUNK_HEIGHT
+	var z = int(floor(world_pos.z)) % Chunk.CHUNK_SIZE
+	
+	# Correct for GDScript's modulo behavior on negatives (e.g. if the coordinate is between 0 and -1.0, go up one floor)
+	if x < 0: x += Chunk.CHUNK_SIZE
+	if y < 0: y += Chunk.CHUNK_HEIGHT
+	if z < 0: z += Chunk.CHUNK_SIZE
+	
+	return Vector3i(x, y, z)
+
+static func create_selection_mesh() -> ArrayMesh:
+	var vertices := PackedVector3Array([
+		# Bottom square
+		Vector3(0,0,0), Vector3(1,0,0), Vector3(1,0,0), Vector3(1,0,1),
+		Vector3(1,0,1), Vector3(0,0,1), Vector3(0,0,1), Vector3(0,0,0),
+		# Top square
+		Vector3(0,1,0), Vector3(1,1,0), Vector3(1,1,0), Vector3(1,1,1),
+		Vector3(1,1,1), Vector3(0,1,1), Vector3(0,1,1), Vector3(0,1,0),
+		# Vertical pillars
+		Vector3(0,0,0), Vector3(0,1,0), Vector3(1,0,0), Vector3(1,1,0),
+		Vector3(1,0,1), Vector3(1,1,1), Vector3(0,0,1), Vector3(0,1,1)
+	])
+	
+	var arr_mesh = ArrayMesh.new()
+	var arrays = []
+	arrays.resize(Mesh.ARRAY_MAX)
+	arrays[Mesh.ARRAY_VERTEX] = vertices
+	
+	arr_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_LINES, arrays)
+	return arr_mesh
+
 enum Faces { BACK,FRONT,LEFT,RIGHT,TOP,BOTTOM }
 const FACE_BACK   := 1 << Faces.BACK
 const FACE_FRONT  := 1 << Faces.FRONT

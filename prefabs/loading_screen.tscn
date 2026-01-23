@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://b33ji6l0xidsu"]
 
 [ext_resource type="Texture2D" uid="uid://b5w3gjqh2v4nx" path="res://textures/textureatlas.png" id="1_57ktq"]
-[ext_resource type="Script" uid="uid://bt6fp5mfovcec" path="res://loading_screen.gd" id="1_h7m7s"]
+[ext_resource type="Script" uid="uid://bt6fp5mfovcec" path="res://scripts/loading_screen.gd" id="1_h7m7s"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_7dm0k"]
 font_size = 48
