@@ -17,7 +17,6 @@ var player_chunk_coordinates : Vector2i
 var loading_screen
 
 var initial_load := false
-var debug_line := false
 
 @export var chunks_per_frame := 4
 @export var render_distance = 8
@@ -76,7 +75,7 @@ func load_chunks() -> void:
 func _ready():
 	player = player_prefab.instantiate() as Player
 	add_child(player)
-	player.global_position = Vector3(Chunk.CHUNK_SIZE * 0.5, 18, Chunk.CHUNK_SIZE * 0.5)
+	player.global_position = Vector3(Chunk.CHUNK_SIZE * 0.5, 16+Chunk.MIN_HEIGHT, Chunk.CHUNK_SIZE * 0.5)
 	player_chunk_coordinates = ChunkHelper.world_to_chunk(player.global_position)
 	load_chunks()
 
@@ -92,9 +91,4 @@ func _physics_process(_delta):
 	if !initial_load and queue.is_empty() and pending_chunks == 0:
 		if chunks.has(current_chunk_coordinates) and chunks[current_chunk_coordinates].is_ready:
 			initial_load = true
-
-func _process(_delta):
-	if Engine.get_frames_drawn() % 1 == 30 and debug_line:
-		print("Frame: ", Engine.get_frames_drawn(), ", Chunks loaded: ", \
-			chunks.size(), ", Wanted chunks: ", wanted_chunks.size(), \
-			", Chunks queued: ", queue.size(), ", Initial load: ", initial_load)
+			player.change_slot()

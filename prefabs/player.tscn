@@ -1,13 +1,49 @@
-[gd_scene load_steps=4 format=3 uid="uid://dx5vamsniy6av"]
+[gd_scene load_steps=14 format=3 uid="uid://dx5vamsniy6av"]
 
 [ext_resource type="Script" uid="uid://6blhmuxk4lav" path="res://scripts/player.gd" id="1_72ieh"]
 [ext_resource type="Script" uid="uid://d35xopa8ao08h" path="res://scripts/build_component.gd" id="2_4dohe"]
+[ext_resource type="Texture2D" uid="uid://b5w3gjqh2v4nx" path="res://textures/textureatlas.png" id="3_r66lb"]
+[ext_resource type="Script" uid="uid://dagcqnskvglwx" path="res://prefabs/ui_highlight_slot.gd" id="4_1txc5"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_72ieh"]
 size = Vector3(0.75, 1.5, 0.75)
 
+[sub_resource type="Image" id="Image_4dohe"]
+data = {
+"data": PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 219, 219, 219, 255, 219, 219, 219, 255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 219, 219, 219, 255, 219, 219, 219, 255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 219, 219, 219, 255, 219, 219, 219, 255, 237, 234, 234, 255, 237, 234, 234, 255, 219, 219, 219, 255, 219, 219, 219, 255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 219, 219, 219, 255, 219, 219, 219, 255, 237, 234, 234, 255, 237, 234, 234, 255, 219, 219, 219, 255, 219, 219, 219, 255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 219, 219, 219, 255, 219, 219, 219, 255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 219, 219, 219, 255, 219, 219, 219, 255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+"format": "RGBA8",
+"height": 16,
+"mipmaps": false,
+"width": 16
+}
+
+[sub_resource type="ImageTexture" id="ImageTexture_r66lb"]
+image = SubResource("Image_4dohe")
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1txc5"]
+atlas = ExtResource("3_r66lb")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ht1c8"]
+atlas = ExtResource("3_r66lb")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kbsxf"]
+atlas = ExtResource("3_r66lb")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_rgeog"]
+load_path = "res://.godot/imported/textureatlas.png-29349efa27228614f22f5a30fcb0f571.s3tc.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_opo22"]
+atlas = SubResource("CompressedTexture2D_rgeog")
+region = Rect2(64, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8rb0w"]
+atlas = ExtResource("3_r66lb")
+region = Rect2(0, 16, 16, 16)
+
 [node name="Player" type="CharacterBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20, 0)
 script = ExtResource("1_72ieh")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
@@ -20,3 +56,312 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
 
 [node name="BuildComponent" type="Node3D" parent="."]
 script = ExtResource("2_4dohe")
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="UI"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -8.0
+offset_top = -8.0
+offset_right = 8.0
+offset_bottom = 8.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("ImageTexture_r66lb")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -43.0
+grow_horizontal = 2
+grow_vertical = 0
+alignment = 1
+
+[node name="Slot" type="Control" parent="UI/HBoxContainer"]
+custom_minimum_size = Vector2(45, 45)
+layout_mode = 2
+
+[node name="UISlot1" type="ColorRect" parent="UI/HBoxContainer/Slot"]
+custom_minimum_size = Vector2(45, 45)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -21.5
+offset_top = -22.5
+offset_right = 23.5
+offset_bottom = 22.5
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.5647059, 0.5411765, 0.5764706, 0.6039216)
+
+[node name="ReferenceRect" type="ReferenceRect" parent="UI/HBoxContainer/Slot/UISlot1"]
+custom_minimum_size = Vector2(45, 45)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -24.0
+offset_top = -24.0
+offset_right = 21.0
+offset_bottom = 21.0
+grow_horizontal = 2
+grow_vertical = 2
+border_color = Color(0.5176471, 0.49411765, 0.5294118, 1)
+border_width = 3.0
+editor_only = false
+
+[node name="TextureRect" type="TextureRect" parent="UI/HBoxContainer/Slot/UISlot1"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.933
+anchor_bottom = 0.933
+offset_left = 6.0
+offset_top = 6.0
+offset_right = -3.9850006
+offset_bottom = -3.9850006
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("AtlasTexture_1txc5")
+
+[node name="Slot2" type="Control" parent="UI/HBoxContainer"]
+custom_minimum_size = Vector2(45, 45)
+layout_mode = 2
+
+[node name="UISlot1" type="ColorRect" parent="UI/HBoxContainer/Slot2"]
+custom_minimum_size = Vector2(45, 45)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -21.5
+offset_top = -22.5
+offset_right = 23.5
+offset_bottom = 22.5
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.5647059, 0.5411765, 0.5764706, 0.6039216)
+
+[node name="ReferenceRect" type="ReferenceRect" parent="UI/HBoxContainer/Slot2/UISlot1"]
+custom_minimum_size = Vector2(45, 45)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -24.0
+offset_top = -24.0
+offset_right = 21.0
+offset_bottom = 21.0
+grow_horizontal = 2
+grow_vertical = 2
+border_color = Color(0.5176471, 0.49411765, 0.5294118, 1)
+border_width = 3.0
+editor_only = false
+
+[node name="TextureRect" type="TextureRect" parent="UI/HBoxContainer/Slot2/UISlot1"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.933
+anchor_bottom = 0.933
+offset_left = 6.0
+offset_top = 6.0
+offset_right = -3.9850006
+offset_bottom = -3.9850006
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("AtlasTexture_ht1c8")
+
+[node name="Slot3" type="Control" parent="UI/HBoxContainer"]
+custom_minimum_size = Vector2(45, 45)
+layout_mode = 2
+
+[node name="UISlot1" type="ColorRect" parent="UI/HBoxContainer/Slot3"]
+custom_minimum_size = Vector2(45, 45)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -21.5
+offset_top = -22.5
+offset_right = 23.5
+offset_bottom = 22.5
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.5647059, 0.5411765, 0.5764706, 0.6039216)
+
+[node name="ReferenceRect" type="ReferenceRect" parent="UI/HBoxContainer/Slot3/UISlot1"]
+custom_minimum_size = Vector2(45, 45)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -24.0
+offset_top = -24.0
+offset_right = 21.0
+offset_bottom = 21.0
+grow_horizontal = 2
+grow_vertical = 2
+border_color = Color(0.5176471, 0.49411765, 0.5294118, 1)
+border_width = 3.0
+editor_only = false
+
+[node name="TextureRect" type="TextureRect" parent="UI/HBoxContainer/Slot3/UISlot1"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.933
+anchor_bottom = 0.933
+offset_left = 6.0
+offset_top = 6.0
+offset_right = -3.9850006
+offset_bottom = -3.9850006
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("AtlasTexture_kbsxf")
+
+[node name="Slot4" type="Control" parent="UI/HBoxContainer"]
+custom_minimum_size = Vector2(45, 45)
+layout_mode = 2
+
+[node name="UISlot1" type="ColorRect" parent="UI/HBoxContainer/Slot4"]
+custom_minimum_size = Vector2(45, 45)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -21.5
+offset_top = -22.5
+offset_right = 23.5
+offset_bottom = 22.5
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.5647059, 0.5411765, 0.5764706, 0.6039216)
+
+[node name="ReferenceRect" type="ReferenceRect" parent="UI/HBoxContainer/Slot4/UISlot1"]
+custom_minimum_size = Vector2(45, 45)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -24.0
+offset_top = -24.0
+offset_right = 21.0
+offset_bottom = 21.0
+grow_horizontal = 2
+grow_vertical = 2
+border_color = Color(0.5176471, 0.49411765, 0.5294118, 1)
+border_width = 3.0
+editor_only = false
+
+[node name="TextureRect" type="TextureRect" parent="UI/HBoxContainer/Slot4/UISlot1"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.933
+anchor_bottom = 0.933
+offset_left = 6.0
+offset_top = 6.0
+offset_right = -3.9850006
+offset_bottom = -3.9850006
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("AtlasTexture_opo22")
+
+[node name="Slot5" type="Control" parent="UI/HBoxContainer"]
+custom_minimum_size = Vector2(45, 45)
+layout_mode = 2
+
+[node name="UISlot1" type="ColorRect" parent="UI/HBoxContainer/Slot5"]
+custom_minimum_size = Vector2(45, 45)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -21.5
+offset_top = -22.5
+offset_right = 23.5
+offset_bottom = 22.5
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.5647059, 0.5411765, 0.5764706, 0.6039216)
+
+[node name="ReferenceRect" type="ReferenceRect" parent="UI/HBoxContainer/Slot5/UISlot1"]
+custom_minimum_size = Vector2(45, 45)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -24.0
+offset_top = -24.0
+offset_right = 21.0
+offset_bottom = 21.0
+grow_horizontal = 2
+grow_vertical = 2
+border_color = Color(0.5176471, 0.49411765, 0.5294118, 1)
+border_width = 3.0
+editor_only = false
+
+[node name="TextureRect" type="TextureRect" parent="UI/HBoxContainer/Slot5/UISlot1"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.933
+anchor_bottom = 0.933
+offset_left = 6.0
+offset_top = 6.0
+offset_right = -3.9850006
+offset_bottom = -3.9850006
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("AtlasTexture_8rb0w")
+
+[node name="Selector" type="ReferenceRect" parent="UI" node_paths=PackedStringArray("slots")]
+custom_minimum_size = Vector2(45, 45)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -145.0
+offset_top = 278.0
+offset_right = -100.0
+offset_bottom = 323.0
+grow_horizontal = 2
+grow_vertical = 2
+border_color = Color(0.585062, 0.585062, 0.58506197, 1)
+border_width = 3.0
+editor_only = false
+script = ExtResource("4_1txc5")
+slots = [NodePath("../HBoxContainer/Slot"), NodePath("../HBoxContainer/Slot2"), NodePath("../HBoxContainer/Slot3"), NodePath("../HBoxContainer/Slot4"), NodePath("../HBoxContainer/Slot5")]

@@ -9,6 +9,12 @@ static func world_to_chunk(p: Vector3) -> Vector2i:
 	var cz := int(floor(p.z / float(Chunk.CHUNK_SIZE)))
 	return Vector2i(cx, cz)
 
+static func Vector3_to_3i(p: Vector3) -> Vector3i:
+	var x := int(floor(p.x))
+	var y := int(floor(p.y))
+	var z := int(floor(p.z))
+	return Vector3i(x, y, z)
+
 static func world_to_local(world_pos: Vector3) -> Vector3i:
 	# Use floor to handle negative world coordinates correctly
 	var x = int(floor(world_pos.x)) % Chunk.CHUNK_SIZE
@@ -55,14 +61,20 @@ enum BlockType {
 	Air,
 	Dirt,
 	Grass,
-	Stone
+	Stone,
+	Planks,
+	Bedrock,
+	Cobblestone
 }
 
 enum AtlasTextures {
 	Dirt,
 	Grass_Side,
 	Grass_Top,
-	Stone
+	Stone,
+	Planks,
+	Bedrock,
+	Cobblestone
 }
 
 # Key: BlockType, Value: Array of atlas positions
@@ -91,6 +103,30 @@ const BLOCK_TEXTURES = {
 		AtlasTextures.Stone,
 		AtlasTextures.Stone,
 		AtlasTextures.Stone
+	],
+	BlockType.Planks: [
+		AtlasTextures.Planks,
+		AtlasTextures.Planks,
+		AtlasTextures.Planks,
+		AtlasTextures.Planks,
+		AtlasTextures.Planks,
+		AtlasTextures.Planks
+	],
+	BlockType.Bedrock: [
+		AtlasTextures.Bedrock,
+		AtlasTextures.Bedrock,
+		AtlasTextures.Bedrock,
+		AtlasTextures.Bedrock,
+		AtlasTextures.Bedrock,
+		AtlasTextures.Bedrock
+	],
+	BlockType.Cobblestone: [
+		AtlasTextures.Cobblestone,
+		AtlasTextures.Cobblestone,
+		AtlasTextures.Cobblestone,
+		AtlasTextures.Cobblestone,
+		AtlasTextures.Cobblestone,
+		AtlasTextures.Cobblestone
 	]
 }
 

@@ -3,15 +3,10 @@ class_name Player
 
 @export_group("Movement")
 # How fast the player moves in meters per second.
-@export var speed = 14
+@export var speed = 7
 # The downward acceleration when in the air, in meters per second squared.
 @export var fall_acceleration = 75
-@export var jump_impulse = 20
-
-# Tree nodes
-var highlight_cube : HighlightCube
-var build_component : BuildComponent
-var cam : Camera3D
+@export var jump_impulse = 15
 
 @export_group("Camera")
 @export var mouse_sensitivity = 0.002
@@ -23,6 +18,16 @@ var last_position : Vector3i
 var last_blocktype : ChunkHelper.BlockType
 var last_idx : int
 var last_chunk : Chunk
+
+var slot = 0
+
+# Tree nodes
+var highlight_cube : HighlightCube
+var build_component : BuildComponent
+var cam : Camera3D
+
+# UI Tree nodes
+var ui_selector : SlotHandler
 
 const OUTLINE_SHADER = preload("res://shaders/wireframe.gdshader")
 
@@ -71,10 +76,18 @@ func _physics_process(delta):
 			velocity.y = jump_impulse
 
 		if Input.is_action_just_pressed("build"):
-			build_component.build()
+			build_component.build(ChunkHelper.Vector3_to_3i(position))
 		
 		if Input.is_action_just_pressed("destroy"):
 			build_component.destroy()
+			
+		if Input.is_action_just_pressed("toggle_selected_block_up"):
+			slot = clamp(slot+1, 0, ui_selector.slots.size()-1)
+			change_slot()
+			
+		if Input.is_action_just_pressed("toggle_selected_block_down"):
+			slot = clamp(slot-1, 0, ui_selector.slots.size()-1)
+			change_slot()
 
 		move_and_slide()
 		_raycast_block_detection()
@@ -84,14 +97,22 @@ func _input(event):
 		if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 			rotate_y(-event.relative.x * mouse_sensitivity)
 			cam.rotate_x(-event.relative.y * mouse_sensitivity)
-			cam.rotation.x = clampf(cam.rotation.x, -deg_to_rad(70), deg_to_rad(70))
+			cam.rotation.x = clampf(cam.rotation.x, -deg_to_rad(90), deg_to_rad(90))
 
 func _create_selection_box():
 	pass
 
-func _ready() -> void:
+func change_slot():
+	build_component.update_selected_block(ui_selector.blocks_in_slots[slot])
+	ui_selector.change_highlighted_slot(slot)
+
+func get_references() -> void:
 	highlight_cube = HighlightCube.new()
 	build_component = $BuildComponent
 	cam = $Camera3D
+	ui_selector = get_node("UI/Selector")
+
+func _ready() -> void:
+	get_references()
 	get_parent().add_child(highlight_cube)
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED

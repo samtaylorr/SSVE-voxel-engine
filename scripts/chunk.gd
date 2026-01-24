@@ -6,10 +6,10 @@ var chunk_coordinates
 const CHUNK_SIZE := 16
 const CHUNK_HEIGHT := 64
 const XY := CHUNK_SIZE * CHUNK_HEIGHT
-const MIN_HEIGHT := 2
+const MIN_HEIGHT := 8
 const HEIGHT_VARIANCE := 24
 
-var atlas_width := 64.0
+var atlas_width := 96.0
 var tile_size := 16.0
 
 var is_ready := false
@@ -28,15 +28,23 @@ func _notification(what):
 
 func create_cube(st: SurfaceTool, x:int, y:int, z:int, culling_mask:int, block_type: int) -> void:
 	var base := Vector3(x,y,z)
-	var atlas_columns : float = 4.0
-	var atlas_rows : float = 1.0
+	var atlas_columns : float = 6.0
+	var atlas_rows : float = 2.0
 	var uv_scale := Vector2(1.0 / atlas_columns, 1.0 / atlas_rows)
 
 	for f in ChunkHelper.FACE_DATA:
 		# If bit is 1 (2^0), this returns 0. If bit is 16 (2^4), this returns 4.
 		var face_index = round(log(f["bit"]) / log(2))
 		var atlas_index = ChunkHelper.BLOCK_TEXTURES[block_type][face_index]
-		var uv_offset = Vector2(atlas_index * uv_scale.x, 0)
+
+		var column := int(atlas_index % int(atlas_columns))
+		var row := int(atlas_index / int(atlas_columns))
+
+		var uv_offset := Vector2(
+			column * uv_scale.x,
+			row * uv_scale.y
+		)
+
 		if (culling_mask & f["bit"]) != 0:
 			emit_face(st, base, f["n"], f["v"], f["uv"], uv_offset, uv_scale)
 
@@ -44,7 +52,7 @@ func emit_face(st: SurfaceTool, base: Vector3, normal: Vector3, verts: PackedVec
 	st.set_normal(normal)
 	for i in range(verts.size()):
 		# Multiply only the X of the UV by 0.25 to 'squash' it into one tile
-		var scaled_uv = Vector2(uvs[i].x * uv_scale.x, uvs[i].y)
+		var scaled_uv = Vector2(uvs[i].x * uv_scale.x, uvs[i].y * uv_scale.y)
 		var final_uv = scaled_uv + uv_offset
 		
 		st.set_uv(final_uv)
@@ -61,7 +69,13 @@ func generate_chunk() -> void:
 			for y in range(CHUNK_HEIGHT):
 				var idx := x + (y * CHUNK_SIZE) + (z * XY)
 				if y+world_origin.y <= height:
-					blocks[idx] = ChunkHelper.BlockType.Grass
+					if y+world_origin.y < MIN_HEIGHT:
+						if y+world_origin.y == 0:
+							blocks[idx] = ChunkHelper.BlockType.Bedrock
+						else:
+							blocks[idx] = ChunkHelper.BlockType.Stone
+					else:
+						blocks[idx] = ChunkHelper.BlockType.Grass
 				else:
 					blocks[idx] = ChunkHelper.BlockType.Air
 

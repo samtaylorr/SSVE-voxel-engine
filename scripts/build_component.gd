@@ -6,7 +6,10 @@ var highlighted_face : ChunkHelper.Faces
 
 var can_build := true
 
-var selected_block : ChunkHelper.BlockType = ChunkHelper.BlockType.Stone
+var selected_block : ChunkHelper.BlockType = ChunkHelper.BlockType.Planks
+
+func update_selected_block(block:ChunkHelper.BlockType):
+	selected_block = block
 
 func snap_update_position(pos:Vector3, n:Vector3):
 	highlighted_position = Vector3i(floor(pos.x), floor(pos.y), floor(pos.z))
@@ -19,11 +22,11 @@ func update_face_direction(n:Vector3):
 			highlighted_face = round(log(f["bit"]) / log(2))
 
 func destroy():
-	if can_build:
+	if can_build and get_block_at_position(highlighted_position)!=ChunkHelper.BlockType.Bedrock:
 		set_block_at_position(highlighted_position, ChunkHelper.BlockType.Air)
 		pass
 
-func build():
+func build(player_pos:Vector3i):
 	if can_build:
 		var new_pos := highlighted_position
 		if highlighted_face == ChunkHelper.Faces.TOP:
@@ -39,7 +42,9 @@ func build():
 		elif highlighted_face == ChunkHelper.Faces.BACK:
 			new_pos += Vector3i(0, 0, -1)
 		
-		if get_block_at_position(new_pos)==ChunkHelper.BlockType.Air:
+		var new_pos_at_player = ChunkHelper.world_to_local(new_pos) == ChunkHelper.world_to_local(player_pos)
+		
+		if get_block_at_position(new_pos)==ChunkHelper.BlockType.Air and !new_pos_at_player:
 			set_block_at_position(new_pos, selected_block)
 
 func get_block_at_position(pos:Vector3i) -> ChunkHelper.BlockType:
