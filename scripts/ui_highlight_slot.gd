@@ -2,6 +2,8 @@ extends ReferenceRect
 class_name SlotHandler
 
 @export var slots : Array[Control]
+# TODO: Automatically set individual texture atlases in slots to the right BlockType.
+
 
 var blocks_in_slots = {
 	0: ChunkHelper.BlockType.Dirt,
