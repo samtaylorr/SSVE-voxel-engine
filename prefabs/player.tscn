@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://6blhmuxk4lav" path="res://scripts/player.gd" id="1_72ieh"]
 [ext_resource type="Script" uid="uid://d35xopa8ao08h" path="res://scripts/build_component.gd" id="2_4dohe"]
 [ext_resource type="Texture2D" uid="uid://b5w3gjqh2v4nx" path="res://textures/textureatlas.png" id="3_r66lb"]
-[ext_resource type="Script" uid="uid://dagcqnskvglwx" path="res://prefabs/ui_highlight_slot.gd" id="4_1txc5"]
+[ext_resource type="Script" uid="uid://dagcqnskvglwx" path="res://scripts/ui_highlight_slot.gd" id="4_1txc5"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_72ieh"]
 size = Vector3(0.75, 1.5, 0.75)
