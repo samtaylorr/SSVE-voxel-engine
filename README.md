@@ -1,3 +1,6 @@
+![A Preview of SSVE](preview.png "SSVE Preview")
+
+
 # Sam's Simple Voxel Engine (SSVE)
 
 A Minecraft-style voxel engine prototype built in **Godot 4**, focusing on learning voxel terrain generation, chunking, and engine architecture.
