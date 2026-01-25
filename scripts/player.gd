@@ -1,23 +1,15 @@
 extends CharacterBody3D
 class_name Player
 
-@export_group("Movement")
-# How fast the player moves in meters per second.
-@export var speed = 7
-# The downward acceleration when in the air, in meters per second squared.
-@export var fall_acceleration = 75
-@export var jump_impulse = 15
-
-@export_group("Camera")
-@export var mouse_sensitivity = 0.002
+@onready var speed = 7
+@onready var fall_acceleration = 75
+@onready var jump_impulse = 15
+@onready var mouse_sensitivity = 0.002
 
 var target_velocity = Vector3.ZERO
 const RAY_LENGTH = 5
 
 var last_position : Vector3i
-var last_blocktype : ChunkHelper.BlockType
-var last_idx : int
-var last_chunk : Chunk
 
 var slot = 0
 
@@ -25,6 +17,7 @@ var slot = 0
 var highlight_cube : HighlightCube
 var build_component : BuildComponent
 var cam : Camera3D
+var chunk_manager : ChunkManager
 
 # UI Tree nodes
 var ui_selector : SlotHandler
@@ -52,48 +45,65 @@ func _raycast_block_detection():
 		build_component.disable_position()
 	
 func _physics_process(delta):
-	if ChunkManager.initial_load:
-		var input_dir := Vector3(
-			Input.get_action_strength("move_right") - Input.get_action_strength("move_left"),
-			0.0,
-			Input.get_action_strength("move_back") - Input.get_action_strength("move_forward")
-		)
+	if not chunk_manager or not chunk_manager.initial_load:
+		return
+	
+	var input_dir := Vector3(
+		Input.get_action_strength("move_right") - Input.get_action_strength("move_left"),
+		0.0,
+		Input.get_action_strength("move_back") - Input.get_action_strength("move_forward")
+	)
 
-		if input_dir.length() > 0.0:
-			input_dir = input_dir.normalized()
+	if input_dir.length() > 0.0:
+		input_dir = input_dir.normalized()
 
-		var world_dir := global_transform.basis * input_dir
+	var world_dir := global_transform.basis * input_dir
+	
+	if speed == null:
+		print("CRITICAL: world_dir is Nil!")
+		return
 
-		velocity.x = world_dir.x * speed
-		velocity.z = world_dir.z * speed
+	velocity.x = world_dir.x * speed
+	velocity.z = world_dir.z * speed
 
-		if not is_on_floor():
-			velocity.y -= fall_acceleration * delta
-		else:
-			velocity.y = 0.0
+	if not is_on_floor():
+		velocity.y -= fall_acceleration * delta
+	else:
+		velocity.y = 0.0
+	
+	if is_on_floor() and Input.is_action_pressed("jump"):
+		velocity.y = jump_impulse
+
+	if Input.is_action_just_pressed("build"):
+		build_component.build(ChunkHelper.Vector3_to_3i(position))
+	
+	if Input.is_action_just_pressed("destroy"):
+		build_component.destroy()
 		
-		if is_on_floor() and Input.is_action_pressed("jump"):
-			velocity.y = jump_impulse
-
-		if Input.is_action_just_pressed("build"):
-			build_component.build(ChunkHelper.Vector3_to_3i(position))
+	if Input.is_action_just_pressed("toggle_selected_block_up"):
+		slot = clamp(slot+1, 0, ui_selector.slots.size()-1)
+		change_slot()
 		
-		if Input.is_action_just_pressed("destroy"):
-			build_component.destroy()
-			
-		if Input.is_action_just_pressed("toggle_selected_block_up"):
-			slot = clamp(slot+1, 0, ui_selector.slots.size()-1)
+	if Input.is_action_just_pressed("toggle_selected_block_down"):
+		slot = clamp(slot-1, 0, ui_selector.slots.size()-1)
+		change_slot()
+	
+	for i in range(5):
+		if Input.is_action_just_pressed("slot"+str(i)):
+			slot = i 
 			change_slot()
-			
-		if Input.is_action_just_pressed("toggle_selected_block_down"):
-			slot = clamp(slot-1, 0, ui_selector.slots.size()-1)
-			change_slot()
+	
+	var _pos := ChunkHelper.Vector3_to_3i(position)
+	_pos = Vector3(_pos.x, 0, _pos.z)
+	if _pos.distance_to(last_position) >= 1.5:
+		AudioManager.play_sfx("step")
+		last_position = _pos
 
-		move_and_slide()
-		_raycast_block_detection()
+	move_and_slide()
+	_raycast_block_detection()
 
 func _input(event):
-	if ChunkManager.initial_load:
+	if chunk_manager and chunk_manager.initial_load:
 		if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 			rotate_y(-event.relative.x * mouse_sensitivity)
 			cam.rotate_x(-event.relative.y * mouse_sensitivity)
@@ -107,10 +117,12 @@ func change_slot():
 	ui_selector.change_highlighted_slot(slot)
 
 func get_references() -> void:
+	chunk_manager = get_parent() as ChunkManager
 	highlight_cube = HighlightCube.new()
 	build_component = $BuildComponent
 	cam = $Camera3D
 	ui_selector = get_node("UI/Selector")
+	last_position = ChunkHelper.Vector3_to_3i(position)
 
 func _ready() -> void:
 	get_references()

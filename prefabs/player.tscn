@@ -45,6 +45,10 @@ region = Rect2(0, 16, 16, 16)
 
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_72ieh")
+speed = null
+fall_acceleration = null
+jump_impulse = null
+mouse_sensitivity = null
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_72ieh")

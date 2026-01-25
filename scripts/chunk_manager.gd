@@ -1,8 +1,8 @@
 extends Node
+class_name ChunkManager
 
-# - Calculate all chunks that needs rendering based on player position and add to a queue
-# - Go through the queue and instantiate a Chunk based on it's iVec2 (chunk coordinate)
-# - make sure each iVec2 is multiplied by the CHUNK_SIZE, e.g. if its on 0,2 then the position of the chunk is x = 0, y = 32
+@export var chunks_per_frame := 4
+@export var render_distance = 8
 
 var chunks := {} # Dictionary<Vector2i, Chunk>
 var enqueued_chunks : Dictionary = {} # Used as a set, Dictionary<Vector2i, null>
@@ -16,10 +16,11 @@ var player : Player
 var player_chunk_coordinates : Vector2i
 var loading_screen
 
-var initial_load := false
+static var initial_load := false
+static var instance: ChunkManager
 
-@export var chunks_per_frame := 4
-@export var render_distance = 8
+func _enter_tree():
+	instance = self
 
 func gen_chunk() -> void:
 	

@@ -146,6 +146,7 @@ func _ready() -> void:
 	noise_gen.noise_type = FastNoiseLite.TYPE_PERLIN
 	noise_gen.frequency = 0.02
 	noise_gen.fractal_octaves = 4
+	noise_gen.seed = ChunkHelper.Seed
 
 func _init(cc: Vector2i): 
 	chunk_coordinates = cc

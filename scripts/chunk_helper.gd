@@ -57,6 +57,8 @@ const FACE_RIGHT  := 1 << Faces.RIGHT
 const FACE_TOP    := 1 << Faces.TOP
 const FACE_BOTTOM := 1 << Faces.BOTTOM
 
+static var Seed := 0
+
 enum BlockType {
 	Air,
 	Dirt,

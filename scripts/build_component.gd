@@ -23,6 +23,7 @@ func update_face_direction(n:Vector3):
 
 func destroy():
 	if can_build and get_block_at_position(highlighted_position)!=ChunkHelper.BlockType.Bedrock:
+		AudioManager.play_sfx("destroy")
 		set_block_at_position(highlighted_position, ChunkHelper.BlockType.Air)
 		pass
 
@@ -45,22 +46,30 @@ func build(player_pos:Vector3i):
 		var new_pos_at_player = ChunkHelper.world_to_local(new_pos) == ChunkHelper.world_to_local(player_pos)
 		
 		if get_block_at_position(new_pos)==ChunkHelper.BlockType.Air and !new_pos_at_player:
+			AudioManager.play_sfx("place")
 			set_block_at_position(new_pos, selected_block)
 
-func get_block_at_position(pos:Vector3i) -> ChunkHelper.BlockType:
+func get_block_properties(pos:Vector3i) -> Dictionary:
 	var chunk_coord = ChunkHelper.world_to_chunk(pos)
-	var chunk = ChunkManager.chunks[chunk_coord]
+	var chunk_manager = ChunkManager.instance
+	var chunk
+	if chunk_manager: 
+		chunk = chunk_manager.chunks.get(chunk_coord)
 	var local = ChunkHelper.world_to_local(pos)
 	var idx = local.x + (local.y * Chunk.CHUNK_SIZE) + (local.z * Chunk.XY)
-	return chunk.blocks[idx]
+	return {
+		"chunk": chunk,
+		"idx": idx
+	}
+
+func get_block_at_position(pos:Vector3i) -> ChunkHelper.BlockType:
+	var p = get_block_properties(pos)
+	return p["chunk"].blocks[p["idx"]]
 
 func set_block_at_position(pos:Vector3i, block:ChunkHelper.BlockType):
-		var chunk_coord = ChunkHelper.world_to_chunk(pos)
-		var chunk = ChunkManager.chunks[chunk_coord]
-		var local = ChunkHelper.world_to_local(pos)
-		var idx = local.x + (local.y * Chunk.CHUNK_SIZE) + (local.z * Chunk.XY)
-		chunk.blocks[idx] = block
-		WorkerThreadPool.add_task(chunk.generate_on_thread, true)
+		var p = get_block_properties(pos)
+		p["chunk"].blocks[p["idx"]] = block
+		WorkerThreadPool.add_task(p["chunk"].generate_on_thread, true)
 
 func disable_position():
 	can_build = false

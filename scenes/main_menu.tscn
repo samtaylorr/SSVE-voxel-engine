@@ -1,0 +1,155 @@
+[gd_scene load_steps=5 format=3 uid="uid://c1iyvrn12ylkv"]
+
+[ext_resource type="Script" uid="uid://cdhnspea4xqt3" path="res://scripts/ui/menuhandler.gd" id="1_ekxnf"]
+[ext_resource type="FontFile" uid="uid://cp7he8k5yb88h" path="res://fonts/Inter/Inter.ttc" id="2_bqqt6"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_7vrkn"]
+font = ExtResource("2_bqqt6")
+font_size = 89
+
+[sub_resource type="LabelSettings" id="LabelSettings_ekxnf"]
+font = ExtResource("2_bqqt6")
+
+[node name="Main Menu" type="Control" node_paths=PackedStringArray("pages", "button_list")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ekxnf")
+pages = [NodePath("MainMenu"), NodePath("NewWorld"), NodePath("LoadWorld")]
+button_list = NodePath("LoadWorld/ScrollContainer/WorldButtons")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.02745098, 0.06666667, 0.13725491, 1)
+
+[node name="Title" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 21.0
+offset_bottom = 130.0
+grow_horizontal = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="Title"]
+layout_mode = 2
+text = "SSVE"
+label_settings = SubResource("LabelSettings_7vrkn")
+
+[node name="MainMenu" type="VBoxContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -362.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 34
+alignment = 1
+
+[node name="New World" type="Button" parent="MainMenu"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "New World"
+
+[node name="Load World" type="Button" parent="MainMenu"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Load World"
+
+[node name="Settings" type="Button" parent="MainMenu"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Settings"
+
+[node name="Exit" type="Button" parent="MainMenu"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Exit"
+
+[node name="NewWorld" type="VBoxContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -527.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 34
+alignment = 1
+
+[node name="WorldBox" type="HBoxContainer" parent="NewWorld"]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="NewWorld/WorldBox"]
+layout_mode = 2
+text = "World Name: "
+label_settings = SubResource("LabelSettings_ekxnf")
+
+[node name="LineEdit" type="LineEdit" parent="NewWorld/WorldBox"]
+layout_mode = 2
+theme_override_constants/minimum_character_width = 16
+placeholder_text = "Enter World"
+max_length = 16
+
+[node name="New World" type="Button" parent="NewWorld"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "New World"
+
+[node name="MainMenu" type="Button" parent="NewWorld"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Main Menu"
+
+[node name="LoadWorld" type="VBoxContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -527.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 34
+alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="LoadWorld"]
+custom_minimum_size = Vector2(750, 250)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+horizontal_scroll_mode = 0
+
+[node name="WorldButtons" type="VBoxContainer" parent="LoadWorld/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MainMenu" type="Button" parent="LoadWorld"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Main Menu"
+
+[connection signal="pressed" from="MainMenu/New World" to="." method="switch_page" binds= [1]]
+[connection signal="pressed" from="MainMenu/Load World" to="." method="switch_page" binds= [2]]
+[connection signal="pressed" from="MainMenu/Settings" to="." method="change_scene" binds= ["res://scenes/settings.tscn"]]
+[connection signal="pressed" from="MainMenu/Exit" to="." method="quit_game"]
+[connection signal="text_changed" from="NewWorld/WorldBox/LineEdit" to="." method="update_new_world_name"]
+[connection signal="pressed" from="NewWorld/New World" to="." method="new_world"]
+[connection signal="pressed" from="NewWorld/MainMenu" to="." method="switch_page" binds= [0]]
+[connection signal="visibility_changed" from="LoadWorld" to="." method="load_world"]
+[connection signal="pressed" from="LoadWorld/MainMenu" to="." method="switch_page" binds= [0]]
