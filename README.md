@@ -39,7 +39,7 @@ A Minecraft-style voxel engine prototype built in **Godot 4**, focusing on learn
 
 * ~~Block breaking & placement~~
 
-* Save / load world data <-- In Progress
+* ~~Save / load world data~~
 
 * ~~Chunk prioritisation around player~~
 
