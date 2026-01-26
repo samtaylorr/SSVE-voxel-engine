@@ -2,7 +2,6 @@ extends Node
 class_name ChunkManager
 
 @export var chunks_per_frame := 4
-@export var render_distance = 8
 
 var chunks := {} # Dictionary<Vector2i, Chunk>
 var enqueued_chunks : Dictionary = {} # Used as a set, Dictionary<Vector2i, null>
@@ -59,8 +58,8 @@ func load_chunks() -> void:
 	var pc := ChunkHelper.world_to_chunk(player.global_position)
 	wanted_chunks.clear()
 	
-	for cx in range(pc.x - render_distance, pc.x + render_distance + 1):
-		for cz in range(pc.y - render_distance, pc.y + render_distance + 1):
+	for cx in range(pc.x - SettingsHandler.render_distance, pc.x + SettingsHandler.render_distance + 1):
+		for cz in range(pc.y - SettingsHandler.render_distance, pc.y + SettingsHandler.render_distance + 1):
 			var key = Vector2i(cx, cz)
 			wanted_chunks[key] = true
 			if !chunks.has(key) and !enqueued_chunks.has(key):

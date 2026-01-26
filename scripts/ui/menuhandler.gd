@@ -3,6 +3,10 @@ extends Control
 @export var pages : Array[VBoxContainer]
 @export var button_list : VBoxContainer
 
+@export_category("Settings Menu")
+@export var render_distance_slider : HSlider
+@export var mouse_sensitivity_slider : HSlider
+
 var new_world_name : String
 var list_of_worlds : Array
 var rng = RandomNumberGenerator.new()
@@ -40,6 +44,15 @@ func new_world():
 	WorldManager.create_world(new_world_name, rng.randi())
 	WorldManager.set_world_params()
 	change_scene("res://scenes/main.tscn")
+
+func load_settings_into_ui():
+	render_distance_slider.value = SettingsHandler.render_distance
+	mouse_sensitivity_slider.value = SettingsHandler.mouse_sensitivity
+
+func save_settings_from_ui():
+	SettingsHandler.render_distance = render_distance_slider.value
+	SettingsHandler.mouse_sensitivity = mouse_sensitivity_slider.value
+	SettingsHandler.save_all_settings()
 
 func update_new_world_name(new_text:String):
 	new_world_name = new_text

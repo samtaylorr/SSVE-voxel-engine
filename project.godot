@@ -22,6 +22,7 @@ config/icon="res://icon.svg"
 AudioManager="*res://scripts/audio_manager.gd"
 WorldManager="*res://world_manager.gd"
 ChunkHelper="*res://scripts/chunk_helper.gd"
+SettingsHandler="*res://scripts/settings_handler.gd"
 
 [editor]
 

@@ -10,7 +10,7 @@ font_size = 89
 [sub_resource type="LabelSettings" id="LabelSettings_ekxnf"]
 font = ExtResource("2_bqqt6")
 
-[node name="Main Menu" type="Control" node_paths=PackedStringArray("pages", "button_list")]
+[node name="Main Menu" type="Control" node_paths=PackedStringArray("pages", "button_list", "render_distance_slider", "mouse_sensitivity_slider")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -18,8 +18,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_ekxnf")
-pages = [NodePath("MainMenu"), NodePath("NewWorld"), NodePath("LoadWorld")]
+pages = [NodePath("MainMenu"), NodePath("NewWorld"), NodePath("LoadWorld"), NodePath("Settings")]
 button_list = NodePath("LoadWorld/ScrollContainer/WorldButtons")
+render_distance_slider = NodePath("Settings/ScrollContainer/SettingsMenu/RenderDistance/HSlider")
+mouse_sensitivity_slider = NodePath("Settings/ScrollContainer/SettingsMenu/MouseSensitivity/HSlider")
 
 [node name="Background" type="ColorRect" parent="."]
 layout_mode = 1
@@ -28,7 +30,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.02745098, 0.06666667, 0.13725491, 1)
+color = Color(0.21157849, 0.33685762, 0.5550242, 1)
 
 [node name="Title" type="HBoxContainer" parent="."]
 layout_mode = 1
@@ -144,12 +146,76 @@ layout_mode = 2
 size_flags_horizontal = 4
 text = "Main Menu"
 
+[node name="Settings" type="VBoxContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -527.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 34
+alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Settings"]
+custom_minimum_size = Vector2(750, 250)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+horizontal_scroll_mode = 0
+
+[node name="SettingsMenu" type="VBoxContainer" parent="Settings/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RenderDistance" type="HBoxContainer" parent="Settings/ScrollContainer/SettingsMenu"]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="Settings/ScrollContainer/SettingsMenu/RenderDistance"]
+layout_mode = 2
+text = "Render Distance"
+label_settings = SubResource("LabelSettings_ekxnf")
+
+[node name="HSlider" type="HSlider" parent="Settings/ScrollContainer/SettingsMenu/RenderDistance"]
+custom_minimum_size = Vector2(250, 31.27)
+layout_mode = 2
+min_value = 1.0
+max_value = 16.0
+value = 1.0
+rounded = true
+
+[node name="MouseSensitivity" type="HBoxContainer" parent="Settings/ScrollContainer/SettingsMenu"]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="Settings/ScrollContainer/SettingsMenu/MouseSensitivity"]
+layout_mode = 2
+text = "Mouse Sensitivity"
+label_settings = SubResource("LabelSettings_ekxnf")
+
+[node name="HSlider" type="HSlider" parent="Settings/ScrollContainer/SettingsMenu/MouseSensitivity"]
+custom_minimum_size = Vector2(250, 31.27)
+layout_mode = 2
+max_value = 0.01
+step = 0.001
+
+[node name="MainMenu" type="Button" parent="Settings"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Main Menu"
+
 [connection signal="pressed" from="MainMenu/New World" to="." method="switch_page" binds= [1]]
 [connection signal="pressed" from="MainMenu/Load World" to="." method="switch_page" binds= [2]]
-[connection signal="pressed" from="MainMenu/Settings" to="." method="change_scene" binds= ["res://scenes/settings.tscn"]]
+[connection signal="pressed" from="MainMenu/Settings" to="." method="switch_page" binds= [3]]
 [connection signal="pressed" from="MainMenu/Exit" to="." method="quit_game"]
 [connection signal="text_changed" from="NewWorld/WorldBox/LineEdit" to="." method="update_new_world_name"]
 [connection signal="pressed" from="NewWorld/New World" to="." method="new_world"]
 [connection signal="pressed" from="NewWorld/MainMenu" to="." method="switch_page" binds= [0]]
 [connection signal="visibility_changed" from="LoadWorld" to="." method="load_world"]
 [connection signal="pressed" from="LoadWorld/MainMenu" to="." method="switch_page" binds= [0]]
+[connection signal="draw" from="Settings" to="." method="load_settings_into_ui"]
+[connection signal="hidden" from="Settings" to="." method="save_settings_from_ui"]
+[connection signal="pressed" from="Settings/MainMenu" to="." method="switch_page" binds= [0]]

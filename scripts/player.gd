@@ -4,7 +4,6 @@ class_name Player
 @onready var speed = 7
 @onready var fall_acceleration = 75
 @onready var jump_impulse = 15
-@onready var mouse_sensitivity = 0.002
 
 var target_velocity = Vector3.ZERO
 const RAY_LENGTH = 5
@@ -105,8 +104,8 @@ func _physics_process(delta):
 func _input(event):
 	if chunk_manager and chunk_manager.initial_load:
 		if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-			rotate_y(-event.relative.x * mouse_sensitivity)
-			cam.rotate_x(-event.relative.y * mouse_sensitivity)
+			rotate_y(-event.relative.x * SettingsHandler.mouse_sensitivity)
+			cam.rotate_x(-event.relative.y * SettingsHandler.mouse_sensitivity)
 			cam.rotation.x = clampf(cam.rotation.x, -deg_to_rad(90), deg_to_rad(90))
 
 func _create_selection_box():
