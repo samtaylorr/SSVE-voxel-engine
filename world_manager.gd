@@ -7,7 +7,9 @@ var selected_world : String
 
 func set_world_params():
 	var world_seed = level_data.get("seed", -1)
+	var chunks = level_data.get("generated_chunks", {})
 	ChunkHelper.Seed = world_seed
+	ChunkHelper.generated_chunks = chunks
 
 func get_data_from_path(folder_path: String) -> Dictionary:
 	var path = folder_path + "/level.dat"
@@ -21,6 +23,37 @@ func get_data_from_path(folder_path: String) -> Dictionary:
 		return {}
 
 	return file.get_var()
+
+func save_chunk():
+	if ChunkHelper.dirty_chunks.is_empty():
+		return
+
+	# 1. We only want to save chunks that are in the 'dirty' list
+	var chunks_to_save = {}
+	
+	ChunkHelper.chunk_lock.lock()
+	for coords in ChunkHelper.dirty_chunks:
+		if ChunkHelper.generated_chunks.has(coords):
+			chunks_to_save[coords] = ChunkHelper.generated_chunks[coords]
+			ChunkHelper.dirty_chunks.erase(coords)
+	ChunkHelper.chunk_lock.unlock()
+
+	# 2. Update level_data with ONLY the modified chunks
+	# We use merge to add the new changes to the existing file data
+	var existing_saves = level_data.get("chunks", {})
+	existing_saves.merge(chunks_to_save)
+	level_data["chunks"] = existing_saves
+	
+	var dir_str = save_folder.path_join(selected_world)
+	var file_path = dir_str.path_join("level.dat")
+	
+	var file = FileAccess.open(file_path, FileAccess.WRITE)
+	
+	if file:
+		file.store_var(level_data)
+		file.close()
+	else:
+		printerr("Failed to save world! Error code: ", FileAccess.get_open_error())
 
 func load_world():
 	var dir_str = save_folder.path_join(selected_world)
@@ -37,7 +70,8 @@ func create_world(_name:String, _seed:int):
 	var new_level_data = {
 		"name": _name,
 		"seed": _seed,
-		"created_at": Time.get_unix_time_from_system()
+		"created_at": Time.get_unix_time_from_system(),
+		"generated_chunks": {}
 	}
 	
 	# Check if the directory exists; if not, create it.

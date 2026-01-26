@@ -83,13 +83,28 @@ func _finalize_chunk(_mesh: Mesh, shape: Shape3D) -> void:
 	self.mesh = _mesh
 	_setup_collision(shape)
 	apply_material()
+	WorldManager.save_chunk()
 	is_ready = true
 
-func generate_on_thread():
-	if !is_disposed and blocks.is_empty():
-		generate_chunk()
+func generate_on_thread(override:bool=false):
+	var shape
+	
+	ChunkHelper.chunk_lock.lock()
+	var saved_blocks = ChunkHelper.generated_chunks.get(chunk_coordinates)
+	ChunkHelper.chunk_lock.unlock()
+	
+	if saved_blocks != null and !override:
+		self.blocks = saved_blocks
+	else:
+		if !is_disposed and blocks.is_empty():
+			generate_chunk()
+			ChunkHelper.chunk_lock.lock()
+			ChunkHelper.generated_chunks[chunk_coordinates] = self.blocks
+			ChunkHelper.chunk_lock.unlock()
+	
 	var st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	
 	var blocks_local := blocks # local reference = faster
 	for z in range(CHUNK_SIZE):
 		for y in range(CHUNK_HEIGHT):
@@ -120,7 +135,8 @@ func generate_on_thread():
 					if !is_disposed:
 						create_cube(st, x, y, z, mask, blocks_local[i])
 	var final_mesh = st.commit()
-	var shape := final_mesh.create_trimesh_shape()
+	shape = final_mesh.create_trimesh_shape()
+	
 	if !is_disposed:
 		call_deferred("_finalize_chunk", final_mesh, shape)
 

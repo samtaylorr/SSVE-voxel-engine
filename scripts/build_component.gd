@@ -59,7 +59,8 @@ func get_block_properties(pos:Vector3i) -> Dictionary:
 	var idx = local.x + (local.y * Chunk.CHUNK_SIZE) + (local.z * Chunk.XY)
 	return {
 		"chunk": chunk,
-		"idx": idx
+		"idx": idx,
+		"chunk_coord": chunk_coord
 	}
 
 func get_block_at_position(pos:Vector3i) -> ChunkHelper.BlockType:
@@ -69,7 +70,15 @@ func get_block_at_position(pos:Vector3i) -> ChunkHelper.BlockType:
 func set_block_at_position(pos:Vector3i, block:ChunkHelper.BlockType):
 		var p = get_block_properties(pos)
 		p["chunk"].blocks[p["idx"]] = block
-		WorkerThreadPool.add_task(p["chunk"].generate_on_thread, true)
+		
+		ChunkHelper.chunk_lock.lock()
+		ChunkHelper.generated_chunks[p["chunk_coord"]] = p["chunk"].blocks
+		ChunkHelper.dirty_chunks.append(p["chunk_coord"])
+		ChunkHelper.chunk_lock.unlock()
+		
+		WorkerThreadPool.add_task(
+			func(): p["chunk"].generate_on_thread(true)
+		)
 
 func disable_position():
 	can_build = false

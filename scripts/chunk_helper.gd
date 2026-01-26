@@ -1,21 +1,20 @@
 extends Node
-class_name ChunkHelper
 
-static func chunk_to_world_space(chunk: Vector2i) -> Vector3:
+func chunk_to_world_space(chunk: Vector2i) -> Vector3:
 	return Vector3(chunk.x*Chunk.CHUNK_SIZE, 0, chunk.y*Chunk.CHUNK_SIZE)
 
-static func world_to_chunk(p: Vector3) -> Vector2i:
+func world_to_chunk(p: Vector3) -> Vector2i:
 	var cx := int(floor(p.x / float(Chunk.CHUNK_SIZE)))
 	var cz := int(floor(p.z / float(Chunk.CHUNK_SIZE)))
 	return Vector2i(cx, cz)
 
-static func Vector3_to_3i(p: Vector3) -> Vector3i:
+func Vector3_to_3i(p: Vector3) -> Vector3i:
 	var x := int(floor(p.x))
 	var y := int(floor(p.y))
 	var z := int(floor(p.z))
 	return Vector3i(x, y, z)
 
-static func world_to_local(world_pos: Vector3) -> Vector3i:
+func world_to_local(world_pos: Vector3) -> Vector3i:
 	# Use floor to handle negative world coordinates correctly
 	var x = int(floor(world_pos.x)) % Chunk.CHUNK_SIZE
 	var y = int(floor(world_pos.y)) % Chunk.CHUNK_HEIGHT
@@ -28,7 +27,7 @@ static func world_to_local(world_pos: Vector3) -> Vector3i:
 	
 	return Vector3i(x, y, z)
 
-static func create_selection_mesh() -> ArrayMesh:
+func create_selection_mesh() -> ArrayMesh:
 	var vertices := PackedVector3Array([
 		# Bottom square
 		Vector3(0,0,0), Vector3(1,0,0), Vector3(1,0,0), Vector3(1,0,1),
@@ -57,7 +56,10 @@ const FACE_RIGHT  := 1 << Faces.RIGHT
 const FACE_TOP    := 1 << Faces.TOP
 const FACE_BOTTOM := 1 << Faces.BOTTOM
 
-static var Seed := 0
+var Seed := 0
+var chunk_lock := Mutex.new()
+var generated_chunks = {}
+var dirty_chunks = []
 
 enum BlockType {
 	Air,
@@ -132,7 +134,7 @@ const BLOCK_TEXTURES = {
 	]
 }
 
-static var FACE_DATA := [
+var FACE_DATA := [
 	{ 
 		"bit": FACE_BACK, # Looking at Z=0 from behind
 		"n": Vector3(0, 0, -1), 
