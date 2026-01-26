@@ -49,7 +49,7 @@ A Minecraft-style voxel engine prototype built in **Godot 4**, focusing on learn
 
 * ~~Basic settings menu~~
 
-* Sub-Menu for in game
+* ~~Sub-Menu for in game~~
 
 ---
 

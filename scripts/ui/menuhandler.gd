@@ -1,4 +1,5 @@
 extends Control
+class_name MenuHandler
 
 @export var pages : Array[VBoxContainer]
 @export var button_list : VBoxContainer
@@ -6,6 +7,8 @@ extends Control
 @export_category("Settings Menu")
 @export var render_distance_slider : HSlider
 @export var mouse_sensitivity_slider : HSlider
+
+var hidden_menu := false
 
 var new_world_name : String
 var list_of_worlds : Array
@@ -56,6 +59,14 @@ func save_settings_from_ui():
 
 func update_new_world_name(new_text:String):
 	new_world_name = new_text
+
+func hide_menu():
+	self.visible = false
+	hidden_menu = true
+
+func show_menu():
+	self.visible = true
+	hidden_menu = false
 
 func _ready() -> void:
 	switch_page(0)

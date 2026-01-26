@@ -9,6 +9,7 @@ var target_velocity = Vector3.ZERO
 const RAY_LENGTH = 5
 
 var last_position : Vector3i
+var paused := false
 
 var slot = 0
 
@@ -17,6 +18,7 @@ var highlight_cube : HighlightCube
 var build_component : BuildComponent
 var cam : Camera3D
 var chunk_manager : ChunkManager
+var sub_menu : MenuHandler
 
 # UI Tree nodes
 var ui_selector : SlotHandler
@@ -44,7 +46,23 @@ func _raycast_block_detection():
 		build_component.disable_position()
 	
 func _physics_process(delta):
-	if not chunk_manager or not chunk_manager.initial_load:
+	if sub_menu.hidden_menu:
+		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	else:
+		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	
+	if Input.is_action_just_pressed("menu"):
+		if sub_menu.hidden_menu:
+			sub_menu.show_menu()
+		else:
+			sub_menu.hide_menu()
+	
+	if sub_menu.hidden_menu:
+		paused = false
+	else:
+		paused = true
+	
+	if not chunk_manager or not chunk_manager.initial_load or paused:
 		return
 	
 	var input_dir := Vector3(
@@ -103,7 +121,7 @@ func _physics_process(delta):
 
 func _input(event):
 	if chunk_manager and chunk_manager.initial_load:
-		if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+		if event is InputEventMouseMotion and !paused:
 			rotate_y(-event.relative.x * SettingsHandler.mouse_sensitivity)
 			cam.rotate_x(-event.relative.y * SettingsHandler.mouse_sensitivity)
 			cam.rotation.x = clampf(cam.rotation.x, -deg_to_rad(90), deg_to_rad(90))
@@ -120,10 +138,11 @@ func get_references() -> void:
 	highlight_cube = HighlightCube.new()
 	build_component = $BuildComponent
 	cam = $Camera3D
+	sub_menu = get_node("/root/Main/Sub Menu")
 	ui_selector = get_node("UI/Selector")
 	last_position = ChunkHelper.Vector3_to_3i(position)
 
 func _ready() -> void:
 	get_references()
+	sub_menu.hide_menu()
 	get_parent().add_child(highlight_cube)
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
