@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://c1iyvrn12ylkv"]
+[gd_scene format=3 uid="uid://c1iyvrn12ylkv"]
 
 [ext_resource type="Script" uid="uid://cdhnspea4xqt3" path="res://scripts/ui/menuhandler.gd" id="1_ekxnf"]
 [ext_resource type="FontFile" uid="uid://cp7he8k5yb88h" path="res://fonts/Inter/Inter.ttc" id="2_bqqt6"]
@@ -10,7 +10,7 @@ font_size = 89
 [sub_resource type="LabelSettings" id="LabelSettings_ekxnf"]
 font = ExtResource("2_bqqt6")
 
-[node name="Main Menu" type="Control" node_paths=PackedStringArray("pages", "button_list", "render_distance_slider", "mouse_sensitivity_slider")]
+[node name="Main Menu" type="Control" unique_id=587176344 node_paths=PackedStringArray("pages", "button_list", "render_distance_slider", "mouse_sensitivity_slider")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -23,7 +23,7 @@ button_list = NodePath("LoadWorld/ScrollContainer/WorldButtons")
 render_distance_slider = NodePath("Settings/ScrollContainer/SettingsMenu/RenderDistance/HSlider")
 mouse_sensitivity_slider = NodePath("Settings/ScrollContainer/SettingsMenu/MouseSensitivity/HSlider")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="ColorRect" parent="." unique_id=573915952]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -32,7 +32,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.21157849, 0.33685762, 0.5550242, 1)
 
-[node name="Title" type="HBoxContainer" parent="."]
+[node name="Title" type="HBoxContainer" parent="." unique_id=2098120529]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
@@ -41,12 +41,12 @@ offset_bottom = 130.0
 grow_horizontal = 2
 alignment = 1
 
-[node name="Label" type="Label" parent="Title"]
+[node name="Label" type="Label" parent="Title" unique_id=219217141]
 layout_mode = 2
 text = "SSVE"
 label_settings = SubResource("LabelSettings_7vrkn")
 
-[node name="MainMenu" type="VBoxContainer" parent="."]
+[node name="MainMenu" type="VBoxContainer" parent="." unique_id=1367718964]
 visible = false
 layout_mode = 1
 anchors_preset = 12
@@ -59,27 +59,27 @@ grow_vertical = 0
 theme_override_constants/separation = 34
 alignment = 1
 
-[node name="New World" type="Button" parent="MainMenu"]
+[node name="New World" type="Button" parent="MainMenu" unique_id=1758957026]
 layout_mode = 2
 size_flags_horizontal = 4
 text = "New World"
 
-[node name="Load World" type="Button" parent="MainMenu"]
+[node name="Load World" type="Button" parent="MainMenu" unique_id=764013865]
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Load World"
 
-[node name="Settings" type="Button" parent="MainMenu"]
+[node name="Settings" type="Button" parent="MainMenu" unique_id=1630651602]
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Settings"
 
-[node name="Exit" type="Button" parent="MainMenu"]
+[node name="Exit" type="Button" parent="MainMenu" unique_id=172028289]
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Exit"
 
-[node name="NewWorld" type="VBoxContainer" parent="."]
+[node name="NewWorld" type="VBoxContainer" parent="." unique_id=458763288]
 visible = false
 layout_mode = 1
 anchors_preset = 12
@@ -92,32 +92,32 @@ grow_vertical = 0
 theme_override_constants/separation = 34
 alignment = 1
 
-[node name="WorldBox" type="HBoxContainer" parent="NewWorld"]
+[node name="WorldBox" type="HBoxContainer" parent="NewWorld" unique_id=752320768]
 layout_mode = 2
 alignment = 1
 
-[node name="Label" type="Label" parent="NewWorld/WorldBox"]
+[node name="Label" type="Label" parent="NewWorld/WorldBox" unique_id=2083161603]
 layout_mode = 2
 text = "World Name: "
 label_settings = SubResource("LabelSettings_ekxnf")
 
-[node name="LineEdit" type="LineEdit" parent="NewWorld/WorldBox"]
+[node name="LineEdit" type="LineEdit" parent="NewWorld/WorldBox" unique_id=1907178721]
 layout_mode = 2
 theme_override_constants/minimum_character_width = 16
 placeholder_text = "Enter World"
 max_length = 16
 
-[node name="New World" type="Button" parent="NewWorld"]
+[node name="New World" type="Button" parent="NewWorld" unique_id=906253530]
 layout_mode = 2
 size_flags_horizontal = 4
 text = "New World"
 
-[node name="MainMenu" type="Button" parent="NewWorld"]
+[node name="MainMenu" type="Button" parent="NewWorld" unique_id=844646657]
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Main Menu"
 
-[node name="LoadWorld" type="VBoxContainer" parent="."]
+[node name="LoadWorld" type="VBoxContainer" parent="." unique_id=112247666]
 visible = false
 layout_mode = 1
 anchors_preset = 12
@@ -130,23 +130,23 @@ grow_vertical = 0
 theme_override_constants/separation = 34
 alignment = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="LoadWorld"]
+[node name="ScrollContainer" type="ScrollContainer" parent="LoadWorld" unique_id=1819562999]
 custom_minimum_size = Vector2(750, 250)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 horizontal_scroll_mode = 0
 
-[node name="WorldButtons" type="VBoxContainer" parent="LoadWorld/ScrollContainer"]
+[node name="WorldButtons" type="VBoxContainer" parent="LoadWorld/ScrollContainer" unique_id=318041018]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="MainMenu" type="Button" parent="LoadWorld"]
+[node name="MainMenu" type="Button" parent="LoadWorld" unique_id=1347144489]
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Main Menu"
 
-[node name="Settings" type="VBoxContainer" parent="."]
+[node name="Settings" type="VBoxContainer" parent="." unique_id=656214048]
 visible = false
 layout_mode = 1
 anchors_preset = 12
@@ -159,27 +159,27 @@ grow_vertical = 0
 theme_override_constants/separation = 34
 alignment = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Settings"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Settings" unique_id=1135235937]
 custom_minimum_size = Vector2(750, 250)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 horizontal_scroll_mode = 0
 
-[node name="SettingsMenu" type="VBoxContainer" parent="Settings/ScrollContainer"]
+[node name="SettingsMenu" type="VBoxContainer" parent="Settings/ScrollContainer" unique_id=530395578]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="RenderDistance" type="HBoxContainer" parent="Settings/ScrollContainer/SettingsMenu"]
+[node name="RenderDistance" type="HBoxContainer" parent="Settings/ScrollContainer/SettingsMenu" unique_id=1061733578]
 layout_mode = 2
 alignment = 1
 
-[node name="Label" type="Label" parent="Settings/ScrollContainer/SettingsMenu/RenderDistance"]
+[node name="Label" type="Label" parent="Settings/ScrollContainer/SettingsMenu/RenderDistance" unique_id=1780190846]
 layout_mode = 2
 text = "Render Distance"
 label_settings = SubResource("LabelSettings_ekxnf")
 
-[node name="HSlider" type="HSlider" parent="Settings/ScrollContainer/SettingsMenu/RenderDistance"]
+[node name="HSlider" type="HSlider" parent="Settings/ScrollContainer/SettingsMenu/RenderDistance" unique_id=109915534]
 custom_minimum_size = Vector2(250, 31.27)
 layout_mode = 2
 min_value = 1.0
@@ -187,22 +187,22 @@ max_value = 12.0
 value = 1.0
 rounded = true
 
-[node name="MouseSensitivity" type="HBoxContainer" parent="Settings/ScrollContainer/SettingsMenu"]
+[node name="MouseSensitivity" type="HBoxContainer" parent="Settings/ScrollContainer/SettingsMenu" unique_id=780083828]
 layout_mode = 2
 alignment = 1
 
-[node name="Label" type="Label" parent="Settings/ScrollContainer/SettingsMenu/MouseSensitivity"]
+[node name="Label" type="Label" parent="Settings/ScrollContainer/SettingsMenu/MouseSensitivity" unique_id=1162419949]
 layout_mode = 2
 text = "Mouse Sensitivity"
 label_settings = SubResource("LabelSettings_ekxnf")
 
-[node name="HSlider" type="HSlider" parent="Settings/ScrollContainer/SettingsMenu/MouseSensitivity"]
+[node name="HSlider" type="HSlider" parent="Settings/ScrollContainer/SettingsMenu/MouseSensitivity" unique_id=1999815161]
 custom_minimum_size = Vector2(250, 31.27)
 layout_mode = 2
 max_value = 0.01
 step = 0.001
 
-[node name="MainMenu" type="Button" parent="Settings"]
+[node name="MainMenu" type="Button" parent="Settings" unique_id=1828757683]
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Main Menu"

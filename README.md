@@ -3,53 +3,23 @@
 
 # Sam's Simple Voxel Engine (SSVE)
 
-A Minecraft-style voxel engine prototype built in **Godot 4**, focusing on learning voxel terrain generation, chunking, and engine architecture.
+A Minecraft-style voxel engine prototype built in **Godot 4.6**, focusing on learning voxel terrain generation, chunking, and engine architecture.
 
 ---
 
-### Roadmap / TODO
+## Installation
 
-* ~~Basic voxel world generation~~
+Go to the recent release and download your preferred binary.
 
-* ~~Chunk-based world loading & unloading~~
+## Building from Source
 
-* ~~Chunk queue system with render distance~~
+Pre-requisites: Godot 4.6
 
-* ~~Asynchronous chunk generation using WorkerThreadPool~~
+Clone the git repo and point Godot to the directory.
 
-* ~~Main-thread–safe mesh building pipeline~~
+## Request/New Features
 
-* ~~Face culling using bitmasks~~
-
-* ~~Raycast-based block selection~~
-
-* ~~Block highlight / placement preview~~
-
-* ~~Initial world loading gate before player spawn~~
-
-* ~~User Interface with hotbar slots~~
-
-* ~~More block types~~
-
-* Trees
-
-* Flowers
-
-* Basic voxel lighting system
-
-* ~~Block breaking & placement~~
-
-* ~~Save / load world data~~
-
-* ~~Chunk prioritisation around player~~
-
-* Mesh optimisation (greedy meshing)
-
-* ~~Performance profiling & spike reduction~~
-
-* ~~Basic settings menu~~
-
-* ~~Sub-Menu for in game~~
+This project was a learning excericse for me and I'm not interested in continuing support, however you are absolutely free to fork this project and do whatever you wish.
 
 ---
 
